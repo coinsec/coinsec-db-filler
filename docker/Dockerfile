@@ -4,7 +4,7 @@ ARG REPO_DIR
 
 EXPOSE 8000
 
-ENV COINSECD_HOST_1=n.testnet-dns.coinsec.network:17210
+ENV COINSECD_HOST_1=n.testnet-dns.coinsec.network
 ENV SQL_URI=postgresql+asyncpg://postgres:password@postgresql:5432/postgres
 ARG version
 ENV VERSION=$version
