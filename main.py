@@ -35,7 +35,7 @@ for i in range(100):
         host = os.environ[f"COINSECD_HOST_{i + 1}"]
         print(host)
         coinsecd_hosts.append(host.strip())
-    except AttributeError:
+    except KeyError:
         break
 
 if not coinsecd_hosts:
