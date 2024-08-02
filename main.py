@@ -5,7 +5,7 @@ import threading
 import time
 
 from BlocksProcessor import BlocksProcessor
-from TxAddrMappingUpdater import TxAddrMappingUpdater
+#from TxAddrMappingUpdater import TxAddrMappingUpdater
 from VirtualChainProcessor import VirtualChainProcessor
 from dbsession import create_all
 from helper import KeyValueStore
@@ -32,8 +32,10 @@ coinsecd_hosts = []
 
 for i in range(100):
     try:
-        coinsecd_hosts.append(os.environ[f"COINSECD_HOST_{i + 1}"].strip())
-    except KeyError:
+        host = getattr(conf, f"COINSECD_HOST_{i + 1}")
+        print(host)
+        coinsecd_hosts.append(host.strip())
+    except AttributeError:
         break
 
 if not coinsecd_hosts:
@@ -91,29 +93,31 @@ async def main():
 
 
 if __name__ == '__main__':
-    tx_addr_mapping_updater = TxAddrMappingUpdater()
+    #tx_addr_mapping_updater = TxAddrMappingUpdater()
 
 
     # custom exception hook for thread
-    def custom_hook(args):
-        global tx_addr_mapping_updater
+    
+    #def custom_hook(args):
+    #    global tx_addr_mapping_updater
         # report the failure
-        _logger.error(f'Thread failed: {args.exc_value}')
-        thread = args[3]
+    #    _logger.error(f'Thread failed: {args.exc_value}')
+    #    thread = args[3]
 
         # check if TxAddrMappingUpdater
-        if thread.name == 'TxAddrMappingUpdater':
-            p = threading.Thread(target=tx_addr_mapping_updater.loop, daemon=True, name="TxAddrMappingUpdater")
-            p.start()
-            raise Exception("TxAddrMappingUpdater thread crashed.")
+    #    if thread.name == 'TxAddrMappingUpdater':
+    #        p = threading.Thread(target=tx_addr_mapping_updater.loop, daemon=True, name="TxAddrMappingUpdater")
+    #        p.start()
+    #        raise Exception("TxAddrMappingUpdater thread crashed.")
 
 
     # set the exception hook
-    threading.excepthook = custom_hook
+    #threading.excepthook = custom_hook
 
     # run TxAddrMappingUpdater
     # will be rerun
-    _logger.info('Starting updater thread now.')
-    threading.Thread(target=tx_addr_mapping_updater.loop, daemon=True, name="TxAddrMappingUpdater").start()
-    _logger.info('Starting main thread now.')
+    #_logger.info('Starting updater thread now.')
+    #threading.Thread(target=tx_addr_mapping_updater.loop, daemon=True, name="TxAddrMappingUpdater").start()
+    #_logger.info('Starting main thread now.')
+    
     asyncio.run(main())
